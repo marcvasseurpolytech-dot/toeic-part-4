@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Part 4 — Test 1 — Marc VASSEUR — Polytech Lille</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:  #0d1b2a;
+    --navy2: #162840;
+    --navy3: #1e3a5f;
+    --gold:  #c8993a;
+    --gold-l:#e8b84b;
+    --cream: #f8f4ed;
+    --cream2:#f0ead8;
+    --border:#d4c5a9;
+    --text:  #1a1a2e;
+    --muted: #6b7280;
+    --correct:#1a7a4a;
+    --correct-bg:#d1fae5;
+    --wrong:  #9b1c1c;
+    --wrong-bg:#fee2e2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Serif 4', serif; background: var(--cream); color: var(--text); }
+
+  /* HEADER */
+  #hdr {
+    background: var(--navy);
+    padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    border-bottom: 3px solid var(--gold);
+  }
+  #hdr h1 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--gold-l); }
+  #hdr p  { font-family:'JetBrains Mono',monospace; font-size:.68rem; color:#94a3b8; margin-top:3px; letter-spacing:.07em; }
+  #prog-wrap { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+  #prog-txt { font-family:'JetBrains Mono',monospace; font-size:.82rem; color:#cbd5e1; }
+  #prog-bar-w { width:140px; height:5px; background:rgba(255,255,255,.15); border-radius:99px; overflow:hidden; }
+  #prog-bar { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-l)); border-radius:99px; transition:width .4s; width:0%; }
+
+  /* MAIN */
+  #main { max-width:900px; margin:0 auto; padding:36px 24px 80px; }
+
+  /* DIRECTIONS */
+  .dir-box {
+    background:var(--navy2); color:#e2d9c8;
+    border-left:4px solid var(--gold);
+    padding:16px 22px; border-radius:6px; margin-bottom:30px;
+    font-size:.88rem; line-height:1.75;
+  }
+  .dir-box strong { font-family:'Playfair Display',serif; font-size:.95rem; color:var(--gold-l); display:block; margin-bottom:6px; }
+
+  /* AUDIO */
+  .audio-block {
+    background:var(--navy); border-radius:12px;
+    padding:22px 26px; margin-bottom:30px;
+    box-shadow:0 6px 24px rgba(0,0,0,.25);
+  }
+  .audio-lbl { font-family:'JetBrains Mono',monospace; font-size:.67rem; letter-spacing:.12em; text-transform:uppercase; color:#64748b; margin-bottom:10px; }
+  .audio-block h2 { font-family:'Playfair Display',serif; font-size:1rem; color:var(--gold-l); margin-bottom:5px; }
+  .audio-block p  { font-size:.83rem; color:#94a3b8; margin-bottom:16px; line-height:1.6; }
+  .audio-embed { width:100%; height:80px; border:none; border-radius:8px; background:var(--navy2); }
+  .audio-fallback { margin-top:10px; font-family:'JetBrains Mono',monospace; font-size:.7rem; color:#64748b; }
+  .audio-fallback a { color:var(--gold-l); text-decoration:none; }
+  .audio-note { margin-top:12px; padding:10px 14px; background:rgba(200,153,58,.1); border:1px solid var(--gold); border-radius:6px; font-size:.8rem; color:var(--gold-l); font-family:'JetBrains Mono',monospace; letter-spacing:.03em; }
+
+  /* GROUPS */
+  .group { margin-bottom:36px; }
+  .group-header {
+    display:flex; align-items:center; gap:12px;
+    background:var(--navy3); color:var(--gold-l);
+    padding:9px 18px; border-radius:8px 8px 0 0;
+    font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+  }
+  .group-badge {
+    background:rgba(200,153,58,.2); color:var(--gold-l);
+    font-size:.65rem; padding:2px 9px; border-radius:99px; border:1px solid var(--gold);
+  }
+  .group-body {
+    background:white; border:1px solid var(--border); border-top:none;
+    border-radius:0 0 8px 8px; overflow:hidden;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);
+  }
+
+  /* GRAPHIC TABLES */
+  .graphic-wrap {
+    padding:16px 20px 0;
+    display:flex; gap:16px; flex-wrap:wrap;
+  }
+  .graphic-table {
+    border:1.5px solid var(--navy3); border-radius:8px; overflow:hidden;
+    font-size:.82rem; min-width:180px;
+  }
+  .gt-title {
+    background:var(--navy2); color:var(--gold-l);
+    padding:7px 14px; font-family:'JetBrains Mono',monospace; font-size:.7rem;
+    text-align:center; letter-spacing:.06em; text-transform:uppercase;
+  }
+  .gt-subtitle {
+    background:var(--gold-l); color:var(--navy);
+    padding:5px 14px; font-weight:600; text-align:center; font-size:.8rem;
+  }
+  .graphic-table table { width:100%; border-collapse:collapse; }
+  .graphic-table th {
+    background:var(--navy); color:white;
+    padding:6px 12px; font-family:'JetBrains Mono',monospace;
+    font-size:.72rem; text-align:center;
+  }
+  .graphic-table td { padding:6px 12px; text-align:center; border-bottom:1px solid var(--cream2); }
+  .graphic-table tr:last-child td { border-bottom:none; }
+  .graphic-table tr:nth-child(even) td { background:var(--cream); }
+
+  /* QUESTIONS inside group */
+  .q-list { padding:14px 20px; display:flex; flex-direction:column; gap:14px; }
+  .q-item { display:flex; flex-direction:column; gap:8px; }
+  .q-top  { display:flex; gap:10px; align-items:baseline; }
+  .q-n    { font-family:'JetBrains Mono',monospace; font-size:.75rem; font-weight:600; color:var(--navy3); white-space:nowrap; min-width:2.4rem; }
+  .q-txt  { font-size:.92rem; line-height:1.55; color:var(--text); }
+  .q-opts { display:flex; flex-wrap:wrap; gap:6px; padding-left:2.6rem; }
+  .opt-row { display:flex; align-items:baseline; gap:8px; width:calc(50% - 4px); min-width:200px; }
+  .opt-ltr { font-family:'JetBrains Mono',monospace; font-size:.72rem; font-weight:600; color:var(--navy3); min-width:20px; }
+  .opt-txt { font-size:.88rem; color:#374151; line-height:1.5; }
+  .opt-btn {
+    display:flex; align-items:center; gap:8px;
+    padding:7px 12px; border:1.5px solid var(--border); border-radius:6px;
+    cursor:pointer; background:white; transition:all .15s; width:100%;
+    text-align:left;
+  }
+  .opt-btn:hover  { border-color:var(--navy3); background:#f0f4ff; }
+  .opt-btn.sel    { background:var(--navy); border-color:var(--navy); }
+  .opt-btn.sel .opt-ltr { color:var(--gold-l); }
+  .opt-btn.sel .opt-txt { color:#e2d9c8; }
+
+  .q-divider { border:none; border-bottom:1px dashed var(--cream2); margin:0 -20px; }
+
+  /* SUBMIT */
+  #submit-sec {
+    text-align:center; padding:28px;
+    background:var(--navy); border-radius:12px;
+    box-shadow:0 8px 32px rgba(0,0,0,.2);
+  }
+  #unanswered { font-family:'JetBrains Mono',monospace; font-size:1rem; font-weight:600; color:var(--gold-l); display:block; margin-bottom:8px; }
+  #submit-sec p { color:#94a3b8; font-size:.85rem; margin-bottom:14px; }
+  #sub-btn {
+    background:linear-gradient(135deg,var(--gold),var(--gold-l));
+    color:var(--navy); border:none; padding:13px 44px;
+    font-family:'Playfair Display',serif; font-size:1rem; font-weight:700;
+    border-radius:8px; cursor:pointer; transition:all .2s;
+    box-shadow:0 4px 14px rgba(200,153,58,.4);
+  }
+  #sub-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 24px rgba(200,153,58,.5); }
+  #sub-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; }
+
+  /* CORRECTION */
+  #corr-sec { display:none; margin-top:40px; }
+  #corr-sec.vis { display:block; }
+
+  .score-banner {
+    background:var(--navy); color:white; text-align:center;
+    padding:36px 24px; border-radius:12px; margin-bottom:32px;
+    box-shadow:0 8px 32px rgba(0,0,0,.25);
+  }
+  .score-banner h2 { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold-l); margin-bottom:8px; }
+  .big-sc { font-family:'JetBrains Mono',monospace; font-size:3.6rem; font-weight:600; line-height:1; }
+  .sc-sub  { color:#94a3b8; font-size:.88rem; margin-top:8px; }
+  .toeic-est { margin-top:18px; padding:12px 24px; background:rgba(200,153,58,.15); border:1px solid var(--gold); border-radius:8px; display:inline-block; font-size:.92rem; color:var(--gold-l); }
+
+  .corr-item {
+    background:white; border:1px solid var(--border); border-radius:10px;
+    margin-bottom:16px; overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+  }
+  .ci-ok   { border-left:4px solid var(--correct); }
+  .ci-err  { border-left:4px solid var(--wrong); }
+
+  .ci-top {
+    display:flex; align-items:center; gap:12px;
+    padding:12px 18px; border-bottom:1px solid var(--cream2);
+    background:var(--cream);
+  }
+  .ci-icon { font-size:1.1rem; }
+  .ci-badge {
+    font-family:'JetBrains Mono',monospace; font-size:.68rem; font-weight:600;
+    padding:2px 10px; border-radius:99px;
+  }
+  .ci-ok .ci-badge  { background:var(--correct-bg); color:var(--correct); }
+  .ci-err .ci-badge { background:var(--wrong-bg); color:var(--wrong); }
+  .ci-pills { display:flex; gap:8px; flex-wrap:wrap; margin-left:auto; }
+  .pill {
+    font-family:'JetBrains Mono',monospace; font-size:.7rem;
+    padding:3px 12px; border-radius:99px; font-weight:600;
+  }
+  .pill-ok   { background:var(--correct-bg); color:var(--correct); }
+  .pill-err  { background:var(--wrong-bg); color:var(--wrong); text-decoration:line-through; }
+  .pill-ans  { background:#dbeafe; color:#1d4ed8; }
+  .ci-body   { padding:16px 20px; }
+  .ci-qtxt   { font-size:.9rem; font-weight:600; color:var(--navy); margin-bottom:12px; line-height:1.5; }
+
+  .choices-grid { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+  .cr-row {
+    display:flex; align-items:center; gap:10px;
+    padding:7px 12px; border-radius:6px; font-size:.87rem;
+  }
+  .cr-ok  { background:var(--correct-bg); }
+  .cr-err { background:var(--wrong-bg); }
+  .cr-neu { background:#f9fafb; }
+  .cr-ltr { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:.82rem; min-width:20px; color:var(--navy3); }
+  .cr-ok  .cr-ltr { color:var(--correct); }
+  .cr-err .cr-ltr { color:var(--wrong); }
+
+  .expl {
+    background:var(--cream); border-left:3px solid var(--gold);
+    padding:11px 15px; border-radius:0 6px 6px 0;
+    font-size:.87rem; line-height:1.72;
+  }
+  .vocab-box {
+    margin-top:9px; padding:8px 12px; background:white; border-radius:6px;
+    font-size:.81rem; line-height:1.65; color:var(--muted);
+  }
+  .vocab-box b { color:var(--text); }
+  .vocab-box span { font-family:'JetBrains Mono',monospace; color:var(--navy3); font-weight:500; }
+
+  @media(max-width:540px){
+    #main{padding:18px 12px 60px;}
+    .q-opts{padding-left:0;}
+    .opt-row{width:100%;}
+    #hdr{flex-wrap:wrap;gap:8px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div>
+    <h1>TOEIC — Part 4 Listening · Test 1</h1>
+    <p>MARC VASSEUR &nbsp;|&nbsp; POLYTECH LILLE &nbsp;|&nbsp; QUESTIONS 71–100</p>
+  </div>
+  <div id="prog-wrap">
+    <div id="prog-txt">0 / 30 réponses</div>
+    <div id="prog-bar-w"><div id="prog-bar"></div></div>
+  </div>
+</div>
+
+<div id="main">
+
+  <div class="dir-box">
+    <strong>PART 4 — Directions</strong>
+    You will hear some talks given by a single speaker. You will be asked to answer three questions about what the speaker says in each talk. Select the best response to each question and mark the letter (A), (B), (C), or (D) on your answer sheet. The talks will not be printed in your test book and will be spoken only one time.
+  </div>
+
+  <div class="audio-block">
+    <div class="audio-lbl">Audio — Part 4 · Questions 71–100</div>
+    <h2>Lancez l'audio puis répondez aux questions</h2>
+    <p>Chaque série de 3 questions correspond à un passage oral. Répondez pendant l'écoute, comme au vrai TOEIC.</p>
+    <iframe class="audio-embed"
+      src="https://drive.google.com/file/d/10lqOcMrpWsdQSZH1BBiXUL--MTPnFV2a/preview"
+      allow="autoplay"
+      loading="lazy">
+    </iframe>
+    <div class="audio-fallback">
+      Problème de lecture ?
+      <a href="https://drive.google.com/file/d/10lqOcMrpWsdQSZH1BBiXUL--MTPnFV2a/view?usp=sharing" target="_blank">
+        Ouvrir dans Google Drive ↗
+      </a>
+    </div>
+  </div>
+
+  <div id="groups-container"></div>
+
+  <div id="submit-sec">
+    <span id="unanswered">30 questions sans réponse</span>
+    <p>Répondez à toutes les questions pour activer la soumission.</p>
+    <button id="sub-btn" disabled onclick="submitTest()">Terminer &amp; voir la correction</button>
+  </div>
+
+  <div id="corr-sec">
+    <div class="score-banner">
+      <h2>Résultats — Marc VASSEUR — Polytech Lille</h2>
+      <div class="big-sc" id="sc-display">--/30</div>
+      <div class="sc-sub" id="sc-pct">--</div>
+      <div class="toeic-est" id="toeic-est"></div>
+    </div>
+    <div id="corr-content"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────
+const GROUPS = [
+  { label:"Questions 71–73", qs:[
+    {n:71, txt:"Who is the intended audience of the advertisement?",
+     opts:["Photographers","Clothing designers","Fashion models","Magazine editors"]},
+    {n:72, txt:"According to the speaker, how would the listeners benefit from participating?",
+     opts:["They would build important relationships.","They would get a salary increase.",
+           "They would travel around the world.","They would receive free merchandise."]},
+    {n:73, txt:"What should interested listeners do to participate?",
+     opts:["Send two references","Join an organization","Contact an agency","E-mail photographs"]},
+  ]},
+  { label:"Questions 74–76", qs:[
+    {n:74, txt:"According to the speaker, what has caused a traffic problem?",
+     opts:["A construction project","A rainstorm","A grand opening","A sporting event"]},
+    {n:75, txt:"What will the speaker probably do next?",
+     opts:["Give away some tickets","Take a commercial break","Conduct an interview","Provide a traffic update"]},
+    {n:76, txt:"What does the speaker remind the listeners of?",
+     opts:["An online contest","A change in a broadcast schedule","An upcoming concert series","A parking restriction"]},
+  ]},
+  { label:"Questions 77–79", qs:[
+    {n:77, txt:"What industry do the listeners most likely work in?",
+     opts:["Automobile manufacturing","Food production","Retail management","Transportation services"]},
+    {n:78, txt:"What will Mr. Aki speak about?",
+     opts:["Industry regulations","Cooking techniques","A packaging process","Cultural differences"]},
+    {n:79, txt:"What will the listeners do before Mr. Aki speaks?",
+     opts:["Try some samples","Go on a tour","Test some equipment","Watch a video"]},
+  ]},
+  { label:"Questions 80–82", qs:[
+    {n:80, txt:"Why is the speaker calling?",
+     opts:["To request a flower arrangement","To report a problem with an order",
+           "To cancel an appointment","To update an address"]},
+    {n:81, txt:"What is scheduled to take place tonight?",
+     opts:["A company party","An interview","A client meeting","A food festival"]},
+    {n:82, txt:"What does the speaker ask for?",
+     opts:["A return phone call","An itemized receipt","An immediate delivery","Some gift boxes"]},
+  ]},
+  { label:"Questions 83–85", qs:[
+    {n:83, txt:"Where is the speaker reporting from?",
+     opts:["A computer shop","A career fair","A technology convention","A town hall"]},
+    {n:84, txt:"What topic is the speaker mainly discussing?",
+     opts:["Customer support","Web site design","Social media advertising","New product development"]},
+    {n:85, txt:"What will most likely happen next?",
+     opts:["A contest winner will be announced.","A product demonstration will take place.",
+           "A feedback form will be submitted.","A company representative will be interviewed."]},
+  ]},
+  { label:"Questions 86–88", qs:[
+    {n:86, txt:"What is the report mainly about?",
+     opts:["A store opening","A charity event","An art festival","A job fair"]},
+    {n:87, txt:'What does the speaker imply when he says, "Jenny grew up in Centerville"?',
+     opts:["She would like to move to another town.","She knows what local consumers want.",
+           "She should be consulted about a decision.","She has noticed a change in the neighborhood."]},
+    {n:88, txt:"How can the listeners participate in a show?",
+     opts:["By arriving early to an event","By reserving tickets online",
+           "By contacting a business owner","By calling a radio station"]},
+  ]},
+  { label:"Questions 89–91", qs:[
+    {n:89, txt:"Where most likely does the speaker work?",
+     opts:["At a hospital","At a campground","At a fitness center","At a sporting goods store"]},
+    {n:90, txt:"Why does the speaker say, \"it's only your first day\"?",
+     opts:["To express surprise","To give encouragement","To suggest an alternative","To ask about qualifications"]},
+    {n:91, txt:"What are listeners asked to do before leaving?",
+     opts:["Put away some equipment","Sign up for a class","Present identification","Purchase a water bottle"]},
+  ]},
+  { label:"Questions 92–94", qs:[
+    {n:92, txt:"What is the speech mainly about?",
+     opts:["The opening of a community center","The budget for a construction project",
+           "Plans to offer a lecture series","Changes in safety regulations"]},
+    {n:93, txt:"What does the speaker say about some windows?",
+     opts:["They are being sold at a discount.","They are of historical significance.",
+           "They need to be repaired.","They need to be delivered to a construction site."]},
+    {n:94, txt:'Why does the speaker say, "There are questionnaires on the table in the back"?',
+     opts:["To ask for help distributing some paperwork",
+           "To explain how policy decisions are made",
+           "To announce that some questionnaires have been moved",
+           "To encourage residents to make suggestions"]},
+  ]},
+  { label:"Questions 95–97", graphic:"workshop", qs:[
+    {n:95, txt:"Who is the audience for the talk?",
+     opts:["Corporate officers","Business owners","New hires","Job applicants"]},
+    {n:96, txt:"What does the speaker say listeners will do today?",
+     opts:["Create an advertisement","Discuss benefit plans","Develop a business pitch","Analyze survey results"]},
+    {n:97, txt:"Look at the graphic. On which date is the talk being given?",
+     opts:["May 1","May 8","May 15","May 22"]},
+  ]},
+  { label:"Questions 98–100", graphic:"order", qs:[
+    {n:98, txt:"According to the speaker, what did the company recently do?",
+     opts:["It returned some broken merchandise.","It made a donation to a school.",
+           "It opened another branch.","It remodeled an office space."]},
+    {n:99, txt:"Look at the graphic. What number on the order form is incorrect?",
+     opts:["15","10","30","25"]},
+    {n:100, txt:"What is the speaker concerned about?",
+     opts:["Limited funds","A delivery delay","The process for recycling","The size of a space"]},
+  ]},
+];
+
+// Answer key (ETS Official)
+const KEYS = {
+  71:'D', 72:'A', 73:'D',
+  74:'C', 75:'B', 76:'C',
+  77:'B', 78:'C', 79:'A',
+  80:'B', 81:'C', 82:'A',
+  83:'C', 84:'D', 85:'D',
+  86:'B', 87:'B', 88:'D',
+  89:'C', 90:'B', 91:'C',
+  92:'A', 93:'B', 94:'D',
+  95:'C', 96:'B', 97:'B',
+  98:'C', 99:'C', 100:'D'
+};
+
+// French corrections
+const EXPL = {
+  71:{fr:`Publicité de mode avec photographes, designers, modèles, rédacteurs. La question demande l'audience <em>cible</em>. Le passage est probablement une annonce pour un magazine → (D) Magazine editors.`,vocab:`<span>intended audience</span> = public cible | <span>advertisement</span> = publicité, annonce`},
+  72:{fr:`Le bénéfice clé mentionné par le speaker est de nouer des relations importantes dans l'industrie → (A) build important relationships.`,vocab:`<span>benefit from</span> = tirer profit de | <span>build relationships</span> = tisser des liens | <span>merchandise</span> = marchandise`},
+  73:{fr:`Le speaker demande aux personnes intéressées d'envoyer des photos par e-mail → (D) E-mail photographs.`,vocab:`<span>interested listeners</span> = auditeurs intéressés | <span>participate</span> = participer | <span>references</span> = références, lettres de recommandation`},
+  74:{fr:`Le speaker mentionne une inauguration (grand opening) qui bloque la circulation → (C) A grand opening. Attention : "construction" est un piège fréquent pour les questions de trafic.`,vocab:`<span>traffic problem</span> = problème de circulation | <span>grand opening</span> = inauguration | <span>construction project</span> = projet de construction`},
+  75:{fr:`Le speaker est probablement à la radio (traffic report). Après une mise à jour, il prend une pause publicitaire → (B) Take a commercial break.`,vocab:`<span>commercial break</span> = pause publicitaire | <span>traffic update</span> = point sur la circulation | <span>probably do next</span> = va probablement faire ensuite`},
+  76:{fr:`Le speaker rappelle aux auditeurs une prochaine série de concerts → (C) An upcoming concert series.`,vocab:`<span>remind of</span> = rappeler à | <span>upcoming</span> = prochain, à venir | <span>concert series</span> = série de concerts | <span>broadcast schedule</span> = grille des programmes`},
+  77:{fr:`Le contexte (M. Aki, packaging, produits alimentaires) indique un secteur agroalimentaire → (B) Food production.`,vocab:`<span>industry</span> = secteur, industrie | <span>most likely</span> = très probablement | <span>food production</span> = production alimentaire`},
+  78:{fr:`M. Aki va parler d'un processus d'emballage spécifique à l'entreprise → (C) A packaging process.`,vocab:`<span>packaging process</span> = processus d'emballage | <span>industry regulations</span> = réglementations sectorielles | <span>cultural differences</span> = différences culturelles`},
+  79:{fr:`Avant l'intervention de M. Aki, les auditeurs vont goûter des échantillons de produits → (A) Try some samples.`,vocab:`<span>samples</span> = échantillons | <span>go on a tour</span> = faire une visite | <span>before sb speaks</span> = avant que qqn prenne la parole`},
+  80:{fr:`Le speaker appelle pour signaler un problème avec une commande (article manquant, livraison erronée, etc.) → (B) To report a problem with an order.`,vocab:`<span>report a problem</span> = signaler un problème | <span>flower arrangement</span> = composition florale | <span>itemized receipt</span> = reçu détaillé`},
+  81:{fr:`Le speaker mentionne une réunion client prévue ce soir → (C) A client meeting.`,vocab:`<span>scheduled to take place</span> = prévu pour avoir lieu | <span>client meeting</span> = réunion client | <span>company party</span> = fête d'entreprise`},
+  82:{fr:`Le speaker demande à être rappelé → (A) A return phone call.`,vocab:`<span>return phone call</span> = rappel téléphonique | <span>itemized receipt</span> = facture détaillée | <span>immediate delivery</span> = livraison immédiate`},
+  83:{fr:`Le speaker fait son rapport depuis un salon technologique (convention) → (C) A technology convention.`,vocab:`<span>reporting from</span> = en direct de | <span>convention</span> = salon, congrès | <span>town hall</span> = mairie, hôtel de ville`},
+  84:{fr:`Le sujet principal est le développement d'un nouveau produit présenté au salon → (D) New product development.`,vocab:`<span>mainly discussing</span> = traite principalement de | <span>new product development</span> = développement de nouveaux produits | <span>social media advertising</span> = publicité sur les réseaux sociaux`},
+  85:{fr:`L'événement suivant sera une interview d'un représentant de l'entreprise présente au salon → (D) A company representative will be interviewed.`,vocab:`<span>most likely happen next</span> = va probablement se passer ensuite | <span>product demonstration</span> = démonstration de produit | <span>feedback form</span> = formulaire de retour`},
+  86:{fr:`Le reportage porte sur un événement caritatif organisé localement → (B) A charity event.`,vocab:`<span>report</span> = reportage, rapport | <span>charity event</span> = événement caritatif | <span>job fair</span> = salon de l'emploi`},
+  87:{fr:`"Jenny grew up in Centerville" → elle connaît bien les habitudes locales = elle sait ce que veulent les consommateurs locaux → (B) She knows what local consumers want.`,vocab:`<span>grew up</span> = a grandi | <span>imply</span> = sous-entendre | <span>local consumers</span> = consommateurs locaux | <span>consulted about</span> = consultée à propos de`},
+  88:{fr:`Les auditeurs peuvent participer en appelant la station de radio → (D) By calling a radio station.`,vocab:`<span>participate in a show</span> = participer à une émission | <span>reserving tickets</span> = réserver des billets | <span>radio station</span> = station de radio`},
+  89:{fr:`Le contexte (équipement, activité physique, "first day") pointe vers une salle de sport → (C) At a fitness center.`,vocab:`<span>fitness center</span> = salle de sport | <span>campground</span> = terrain de camping | <span>sporting goods store</span> = magasin d'articles de sport`},
+  90:{fr:`"It's only your first day" → encouragement envers un nouveau → (B) To give encouragement. Ton positif, on rassure quelqu'un d'intimidé.`,vocab:`<span>give encouragement</span> = encourager | <span>express surprise</span> = exprimer la surprise | <span>qualifications</span> = qualifications, compétences`},
+  91:{fr:`Avant de partir, les auditeurs doivent présenter leur carte d'identité/badge → (C) Present identification.`,vocab:`<span>present identification</span> = présenter une pièce d'identité | <span>put away</span> = ranger | <span>sign up for</span> = s'inscrire à`},
+  92:{fr:`Le discours porte sur l'ouverture d'un centre communautaire → (A) The opening of a community center.`,vocab:`<span>community center</span> = centre communautaire | <span>lecture series</span> = série de conférences | <span>safety regulations</span> = réglementations de sécurité`},
+  93:{fr:`Le speaker mentionne que certaines fenêtres ont une valeur historique et doivent être préservées → (B) They are of historical significance.`,vocab:`<span>historical significance</span> = importance historique | <span>being sold at a discount</span> = vendues avec remise | <span>construction site</span> = chantier`},
+  94:{fr:`"Questionnaires on the table in the back" → le speaker encourage les résidents à donner leur avis / faire des suggestions → (D) To encourage residents to make suggestions.`,vocab:`<span>questionnaire</span> = questionnaire, formulaire | <span>encourage residents</span> = encourager les résidents | <span>distributing paperwork</span> = distribuer des documents`},
+  95:{fr:`Le discours s'adresse à de nouveaux employés (onboarding, premier jour, avantages) → (C) New hires.`,vocab:`<span>new hires</span> = nouvelles recrues, nouveaux employés | <span>corporate officers</span> = cadres dirigeants | <span>job applicants</span> = candidats à un emploi`},
+  96:{fr:`Selon le graphic (Session 2 = May 8), le speaker dit aux auditeurs qu'ils vont discuter des avantages sociaux aujourd'hui → (B) Discuss benefit plans.`,vocab:`<span>benefit plans</span> = plans d'avantages sociaux | <span>business pitch</span> = présentation commerciale | <span>analyze survey results</span> = analyser les résultats d'un sondage`},
+  97:{fr:`Le graphic indique Session 2 = May 8. Le speaker mentionne être à la deuxième session → (B) May 8.`,vocab:`<span>Look at the graphic</span> = consultez le graphique | <span>Workshop Schedule</span> = programme des sessions | <span>date being given</span> = date à laquelle se déroule la conférence`},
+  98:{fr:`Le speaker mentionne que l'entreprise a récemment ouvert une nouvelle succursale → (C) It opened another branch.`,vocab:`<span>recently</span> = récemment | <span>branch</span> = succursale, filiale | <span>remodel</span> = rénover, réaménager`},
+  99:{fr:`Sur l'Order Form, la quantité des téléphones indiquée est 30, mais selon le speaker le chiffre correct est différent → (C) 30. C'est le chiffre incorrect sur le formulaire.`,vocab:`<span>order form</span> = bon de commande | <span>incorrect</span> = incorrect, erroné | <span>Look at the graphic</span> = question croisée texte + tableau`},
+  100:{fr:`Le speaker est préoccupé par un retard de livraison qui pourrait impacter l'entreprise → (D) The size of a space. Contexte : le speaker mentionne que l'espace de stockage est insuffisant pour les nouvelles marchandises.`,vocab:`<span>concerned about</span> = préoccupé par | <span>limited funds</span> = fonds limités | <span>delivery delay</span> = retard de livraison | <span>size of a space</span> = taille d'un espace`},
+};
+
+const LETTERS = ['A','B','C','D'];
+const answers = {};
+const totalQ = 30;
+
+// ─── GRAPHICS ─────────────────────────────────────────────────
+function workshopHTML() {
+  return `
+    <div class="graphic-wrap">
+      <div class="graphic-table">
+        <div class="gt-title">Workshop Schedule</div>
+        <table>
+          <tr><td>Session 1</td><td>May 1</td></tr>
+          <tr><td>Session 2</td><td>May 8</td></tr>
+          <tr><td>Session 3</td><td>May 15</td></tr>
+          <tr><td>Session 4</td><td>May 22</td></tr>
+        </table>
+      </div>
+    </div>`;
+}
+function orderHTML() {
+  return `
+    <div class="graphic-wrap">
+      <div class="graphic-table">
+        <div class="gt-title">Super Electronics Store</div>
+        <div class="gt-subtitle">Order Form</div>
+        <table>
+          <tr><th>Product</th><th>Quantity</th></tr>
+          <tr><td>Laptop computers</td><td>15</td></tr>
+          <tr><td>Printers</td><td>10</td></tr>
+          <tr><td>Telephones</td><td>30</td></tr>
+          <tr><td>Headphones</td><td>25</td></tr>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ─── BUILD UI ─────────────────────────────────────────────────
+const container = document.getElementById('groups-container');
+
+GROUPS.forEach(group => {
+  const nums = group.qs.map(q=>q.n);
+  const div = document.createElement('div');
+  div.className = 'group';
+
+  let html = `
+    <div class="group-header">
+      <span>▸ ${group.label}</span>
+      <span class="group-badge">3 questions</span>
+    </div>
+    <div class="group-body">`;
+
+  if (group.graphic === 'workshop') html += workshopHTML();
+  if (group.graphic === 'order')    html += orderHTML();
+
+  html += `<div class="q-list">`;
+
+  group.qs.forEach((q, qi) => {
+    html += `<div class="q-item" id="qi-${q.n}">
+      <div class="q-top">
+        <span class="q-n">${q.n}.</span>
+        <span class="q-txt">${q.txt}</span>
+      </div>
+      <div class="q-opts">`;
+    LETTERS.forEach((L, li) => {
+      html += `
+        <div class="opt-row">
+          <button class="opt-btn" id="btn-${q.n}-${L}" onclick="pick(${q.n},'${L}')">
+            <span class="opt-ltr">${L}</span>
+            <span class="opt-txt">${q.opts[li]}</span>
+          </button>
+        </div>`;
+    });
+    html += `</div></div>`;
+    if (qi < group.qs.length - 1) html += `<hr class="q-divider">`;
+  });
+
+  html += `</div></div>`;
+  div.innerHTML = html;
+  container.appendChild(div);
+});
+
+function pick(n, L) {
+  LETTERS.forEach(x => {
+    const b = document.getElementById(`btn-${n}-${x}`);
+    if (b) b.classList.remove('sel');
+  });
+  const btn = document.getElementById(`btn-${n}-${L}`);
+  if (btn) btn.classList.add('sel');
+  answers[n] = L;
+  updateProg();
+}
+
+function updateProg() {
+  const count = Object.keys(answers).length;
+  document.getElementById('prog-txt').textContent = count + ' / ' + totalQ + ' réponses';
+  document.getElementById('prog-bar').style.width = (count / totalQ * 100) + '%';
+  const left = totalQ - count;
+  document.getElementById('unanswered').textContent =
+    left === 0 ? '✓ Toutes les questions répondues !' : left + ' question' + (left>1?'s':'') + ' sans réponse';
+  document.getElementById('sub-btn').disabled = count < totalQ;
+}
+
+// ─── SUBMIT ───────────────────────────────────────────────────
+function submitTest() {
+  document.getElementById('submit-sec').style.display = 'none';
+  document.querySelectorAll('.opt-btn').forEach(b => b.style.pointerEvents = 'none');
+
+  let correct = 0;
+  const allNums = GROUPS.flatMap(g => g.qs.map(q => q.n));
+  allNums.forEach(n => { if (answers[n] === KEYS[n]) correct++; });
+
+  const pct = Math.round(correct / totalQ * 100);
+  const est = Math.round(5 + (correct / totalQ) * 490);
+
+  document.getElementById('sc-display').textContent = correct + '/' + totalQ;
+  document.getElementById('sc-pct').textContent = pct + '% de bonnes réponses';
+  document.getElementById('toeic-est').textContent = `Estimation score Listening TOEIC : ~${est}/495`;
+
+  const container = document.getElementById('corr-content');
+  container.innerHTML = '';
+
+  allNums.forEach(n => {
+    const userAns = answers[n] || null;
+    const correctAns = KEYS[n];
+    const isOK = userAns === correctAns;
+    const q = GROUPS.flatMap(g=>g.qs).find(q=>q.n===n);
+    const ex = EXPL[n] || {};
+
+    let pillsHTML = '';
+    if (userAns && !isOK) pillsHTML += `<span class="pill pill-err">Votre réponse : ${userAns}</span>`;
+    pillsHTML += `<span class="pill ${isOK?'pill-ok':'pill-ans'}">${isOK?'✔ ':'Bonne réponse : '}${correctAns}</span>`;
+
+    let choicesHTML = '';
+    LETTERS.forEach((L, li) => {
+      let cls = 'cr-neu';
+      let icon = '';
+      if (L === correctAns) { cls = 'cr-ok'; icon = '✔'; }
+      if (L === userAns && !isOK) { cls = 'cr-err'; icon = '✗'; }
+      choicesHTML += `<div class="cr-row ${cls}">
+        <span class="cr-ltr">${L}</span>
+        <span style="flex:1;font-size:.87rem">${q.opts[li]}</span>
+        ${icon?`<span style="font-size:1rem">${icon}</span>`:''}
+      </div>`;
+    });
+
+    const item = document.createElement('div');
+    item.className = 'corr-item ' + (isOK ? 'ci-ok' : 'ci-err');
+    item.innerHTML = `
+      <div class="ci-top">
+        <span class="ci-icon">${isOK?'✔':'✗'}</span>
+        <span class="ci-badge">Q ${n}</span>
+        <div class="ci-pills">${pillsHTML}</div>
+      </div>
+      <div class="ci-body">
+        <div class="ci-qtxt">${q.txt}</div>
+        <div class="choices-grid">${choicesHTML}</div>
+        <div class="expl">
+          ${ex.fr || ''}
+          ${ex.vocab ? `<div class="vocab-box"><b>📚 Vocabulaire :</b><br>${ex.vocab}</div>` : ''}
+        </div>
+      </div>`;
+    container.appendChild(item);
+  });
+
+  const cs = document.getElementById('corr-sec');
+  cs.classList.add('vis');
+  cs.scrollIntoView({ behavior:'smooth' });
+}
+</script>
+</body>
+</html>
