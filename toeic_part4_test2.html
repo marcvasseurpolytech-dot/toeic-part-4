@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC Practice Suite - Part 4 Full Context</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --navy: #132034;
+            --navy-light: #1c2e4a;
+            --gold: #f2b749;
+            --bg-cream: #f8f5ee;
+            --text-dark: #333;
+            --text-light: #f8f5ee;
+            --gray: #e0e0e0;
+            --gray-dark: #8fa0ba;
+            --correct: #2e7d32;
+            --incorrect: #d32f2f;
+            --correct-bg: #e8f5e9;
+            --incorrect-bg: #ffebee;
+            --font-serif: 'Merriweather', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-sans);
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--navy);
+            color: var(--text-light);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--gold);
+        }
+
+        .header-left h1 {
+            font-family: var(--font-serif);
+            color: var(--gold);
+            margin: 0 0 5px 0;
+            font-size: 1.8rem;
+        }
+
+        .header-left p {
+            margin: 0;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            color: var(--gray-dark);
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(255,255,255,0.2);
+            padding-left: 30px;
+        }
+
+        .stat-box:first-child { border-left: none; }
+
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--gray-dark);
+            letter-spacing: 1px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .info-card {
+            background-color: var(--navy);
+            border-radius: 12px;
+            padding: 25px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .info-item-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--gray-dark);
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item-val {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .highlight-text { color: var(--gold); }
+
+        .audio-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .audio-iframe {
+            width: 100%;
+            height: 120px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .btn-drive {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--gold);
+            color: var(--navy);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            align-self: flex-start;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-drive:hover { opacity: 0.9; }
+
+        .test-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eae6de;
+        }
+
+        .section-header {
+            font-size: 1.5rem;
+            font-family: var(--font-serif);
+            border-bottom: 2px solid var(--bg-cream);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            color: var(--navy);
+        }
+
+        /* Styles des sections graphiques épurées */
+        .inline-graphic-wrapper {
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .blink-btn {
+            background-color: var(--incorrect);
+            color: white;
+            font-weight: 700;
+            font-family: var(--font-sans);
+            padding: 10px 22px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulse-blink 1.2s infinite;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(213, 47, 47, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .blink-btn:hover { transform: scale(1.02); }
+
+        @keyframes pulse-blink {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.6); }
+            50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+
+        .graphic-content {
+            display: none;
+            background: #fffdf9;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px dashed var(--gold);
+            animation: fadeIn 0.3s ease-in-out;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .graphic-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--navy);
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .graphic-table {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background: white;
+        }
+        .graphic-table td {
+            border: 2px solid var(--navy);
+            padding: 12px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .graphic-table td:first-child { text-align: left; }
+        .truck-icon { font-size: 1.8rem; margin-right: 10px; vertical-align: middle; color: black; }
+
+        .graphic-map {
+            display: grid;
+            grid-template-columns: 1fr 40px 1fr;
+            gap: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 3px solid var(--navy);
+            background: white;
+            padding: 10px;
+        }
+        .map-col { display: flex; flex-direction: column; gap: 10px; }
+        .map-hallway { background: var(--bg-cream); display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; color: var(--gray-dark); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;}
+        .map-room {
+            border: 2px solid var(--navy);
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .map-room-title { font-weight: 700; margin-bottom: 5px; }
+
+        .questions-group { margin-bottom: 25px; }
+
+        .questions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 18px;
+            background: var(--bg-cream);
+            border-radius: 8px;
+            border: 1px solid #e2dacb;
+        }
+
+        .q-text-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .q-num {
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 1.1rem;
+            min-width: 35px;
+        }
+
+        .q-text {
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 1rem;
+        }
+
+        .options-group { 
+            display: flex; 
+            flex-direction: column;
+            gap: 8px; 
+            padding-left: 35px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #b6c1d4;
+            margin-right: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: var(--navy);
+            background: white;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .option-item:hover .option-label { border-color: var(--navy); background-color: #f0f4f8; }
+        input[type="radio"] { display: none; }
+        
+        input[type="radio"]:checked + .option-label {
+            background-color: var(--navy);
+            border-color: var(--navy);
+            color: white;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            max-width: 350px;
+            margin: 50px auto 0;
+            padding: 16px;
+            background-color: #cbd5e1;
+            color: #94a3b8;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: not-allowed;
+            transition: all 0.3s;
+        }
+
+        .submit-btn.active {
+            background-color: var(--gold);
+            color: var(--navy);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(242, 183, 73, 0.3);
+        }
+
+        .submit-btn.active:hover { transform: translateY(-2px); }
+
+        #results-container { display: none; }
+        
+        .score-banner {
+            background: var(--navy);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        .score-banner h2 { margin: 0 0 10px 0; font-family: var(--font-serif); color: var(--gold); }
+        .score-number { font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 10px; }
+        .score-estimation { font-size: 1.1rem; color: #cbd5e1; }
+
+        .talk-correction {
+            background: white;
+            border: 1px solid #eae6de;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .talk-transcript {
+            background: var(--bg-cream);
+            padding: 20px;
+            border-left: 4px solid var(--navy);
+            font-style: italic;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .correction-q {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eae6de;
+        }
+        .correction-q:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .cq-header {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--navy);
+        }
+
+        .cq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .cq-opt {
+            padding: 10px 15px;
+            border-radius: 6px;
+            background: var(--bg-cream);
+            border: 1px solid #e0dcd2;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cq-opt.correct { background: var(--correct-bg); border-color: var(--correct); font-weight: 600; color: var(--correct); }
+        .cq-opt.wrong { background: var(--incorrect-bg); border-color: var(--incorrect); color: var(--incorrect); }
+        
+        .cq-letter { font-weight: 700; margin-right: 15px; width: 20px; }
+
+        .cq-explanation {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .cq-vocab {
+            background: var(--navy-light);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1>TOEIC Practice Suite</h1>
+            <p>MARC VASSEUR • POLYTECH LILLE</p>
+        </div>
+        <div class="header-right">
+            <div class="stat-box">
+                <span class="stat-num">4</span>
+                <span class="stat-label">PART</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-num">30</span>
+                <span class="stat-label">QUESTIONS</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="info-card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-item-label">Format</span>
+                    <span class="info-item-val">TOEIC Listening</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Section</span>
+                    <span class="info-item-val"><span class="highlight-text">Part 4</span> — Talks</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Questions</span>
+                    <span class="info-item-val">30 questions • Q71–100</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Audio</span>
+                    <span class="info-item-val"><span class="highlight-text">Google Drive</span> intégré</span>
+                </div>
+            </div>
+            
+            <div class="audio-section">
+                <iframe class="audio-iframe" src="https://drive.google.com/file/d/1DjfUwUnBt7URgz1Ey-8sIW_HVF8qtVBe/preview" allow="autoplay"></iframe>
+                <a href="https://drive.google.com/file/d/1DjfUwUnBt7URgz1Ey-8sIW_HVF8qtVBe/view" target="_blank" class="btn-drive">
+                    ↗ Ouvrir dans Google Drive
+                </a>
+            </div>
+        </div>
+
+        <div id="test-container" class="test-container">
+            <h2 class="section-header">Talks — Monologues</h2>
+            <p style="color: #666; margin-bottom: 30px; font-size: 0.9rem;">Lisez attentivement les questions ci-dessous et lancez l'audio. Sélectionnez la réponse (A), (B), (C) ou (D) qui convient le mieux.</p>
+
+            <form id="toeic-form">
+                <div class="questions-group" id="dynamic-questions-container"></div>
+                <button type="button" id="submit-btn" class="submit-btn" disabled>Terminer le test (0/30)</button>
+            </form>
+        </div>
+
+        <div id="results-container">
+            <div class="score-banner">
+                <h2>Résultats du Test</h2>
+                <div class="score-number"><span id="score-val">0</span> / 30</div>
+                <div class="score-estimation">Estimation Score Listening : <strong style="color:var(--gold);" id="score-est">0</strong> / 495</div>
+            </div>
+            
+            <h2 class="section-header">Correction Détaillée</h2>
+            <div id="correction-content"></div>
+        </div>
+    </main>
+
+    <script>
+        function toggleGraphic(id, btn) {
+            const graphic = document.getElementById(id);
+            if (graphic.style.display === "block") {
+                graphic.style.display = "none";
+                btn.style.animation = "pulse-blink 1.2s infinite";
+                btn.style.backgroundColor = "var(--incorrect)";
+                btn.textContent = "⚠️ Look at the graphic — click here";
+            } else {
+                graphic.style.display = "block";
+                btn.style.animation = "none";
+                btn.style.backgroundColor = "var(--navy)";
+                btn.textContent = "Hide graphic";
+            }
+        }
+
+        const testData = [
+            {
+                talk: "Questions 71-73 refer to the following announcement.",
+                transcript: "Attention visitors. The Natural History Museum's film screening of Wales will take place at three o'clock this afternoon. The screening is free but space is limited, so register in advance at the information desk. Also, we remind you that large bags and backpacks are not permitted in the exhibit halls, so please leave them at the coat check located just next to the main entrance.",
+                questions: [
+                    { id: 71, text: "According to the speaker, what will begin at three o'clock?", options: { A: "A lecture", B: "An opening reception", C: "A film screening", D: "A demonstration" }, correct: "C", explanation: "L'orateur annonce clairement que la projection du film (« film screening ») commencera à 15 heures.", vocab: "screening (n.) : projection d'un film\ntake place (v.) : avoir lieu" },
+                    { id: 72, text: "What does the speaker ask listeners to do?", options: { A: "Pick up a parking pass", B: "Return an audio guide", C: "Take a map", D: "Sign up in advance" }, correct: "D", explanation: "L'orateur recommande de s'inscrire à l'avance (« register in advance »), ce qui équivaut à l'option D (« Sign up in advance »).", vocab: "register (v.) : s'inscrire\nsign up (v.) : s'inscrire" },
+                    { id: 73, text: "According to the speaker, what is prohibited?", options: { A: "Food and drink", B: "Mobile phones", C: "Backpacks", D: "Umbrellas" }, correct: "C", explanation: "Le texte stipule explicitement que les grands sacs et sacs à dos ne sont pas autorisés (« large bags and backpacks are not permitted »).", vocab: "prohibited (adj.) : interdit\nbackpack (n.) : sac à dos\ncoat check (n.) : vestiaire" }
+                ]
+            },
+            {
+                talk: "Questions 74-76 refer to the following telephone message.",
+                transcript: "Hello, Ms. Ishida. This is Ken Hartman calling from North Point Real Estate Agency. I found a two-bedroom apartment that I think you should take a look at. It's in a newly constructed building, and since you requested a place close to a park, you'll be happy to know that Biltmore Park is right down the street. Now, I'm not sure when you'd like to move, but if you're interested in a tour, please give me a call. My number is 555-0030. Thank you.",
+                questions: [
+                    { id: 74, text: "Who most likely is the speaker?", options: { A: "A park manager", B: "A real estate agent", C: "An interior decorator", D: "A tour guide" }, correct: "B", explanation: "Le locuteur mentionne dès l'introduction qu'il appelle depuis une agence immobilière (« North Point Real Estate Agency »).", vocab: "real estate agent (n.) : agent immobilier\ntake a look at (expr.) : jeter un coup d'œil à" },
+                    { id: 75, text: "According to the speaker, what is near the building?", options: { A: "A park", B: "A school", C: "A river", D: "A museum" }, correct: "A", explanation: "L'orateur confirme que l'appartement se trouve juste à côté du parc demandé (« Biltmore Park is right down the street »).", vocab: "newly constructed (adj.) : récemment construit\nright down the street (expr.) : juste au bout de la rue" },
+                    { id: 76, text: "What does the speaker ask the listener to do?", options: { A: "Sign an agreement", B: "Make a payment", C: "Send an e-mail", D: "Return a phone call" }, correct: "D", explanation: "Le message se termine par la demande de le rappeler (« please give me a call »), ce qui se traduit par « Return a phone call ».", vocab: "tour (n.) : visite guidée / repérage\ngive someone a call (expr.) : passer un coup de fil" }
+                ]
+            },
+            {
+                talk: "Questions 77-79 refer to the following advertisement.",
+                transcript: "If you're looking for a great local restaurant, try Gallo's Bistro. Here at Gallo's Bistro, we're known for having a full dinner menu that changes seasonally with locally grown fruits and vegetables. We even have a farm next door. You're guaranteed to taste the difference in our dishes. And for your convenience, we also make meals to take home. Any large order of $100 or more will get an automatic 10% discount. Visit our website today to see our complete menu.",
+                questions: [
+                    { id: 77, text: "What is being advertised?", options: { A: "A supermarket", B: "A restaurant", C: "A convention center", D: "A hotel" }, correct: "B", explanation: "L'orateur invite expressément les auditeurs à essayer leur établissement (« try Gallo's Bistro »), qui est un restaurant local.", vocab: "advertised (adj.) : dont on fait la promotion / publicité\nbistro / restaurant (n.) : un restaurant" },
+                    { id: 78, text: "Why does the speaker say, \"We even have a farm next door\"?", options: { A: "To emphasize that ingredients are fresh", B: "To recommend an outdoor venue", C: "To publicize a career opportunity", D: "To congratulate some employees" }, correct: "A", explanation: "La mention de la ferme adjacente sert à appuyer le fait que les fruits et légumes sont frais et de saison (« fresh ingredients »).", vocab: "emphasize (v.) : insister sur, souligner\nlocally grown (adj.) : de production locale / cultivé sur place" },
+                    { id: 79, text: "How can the listeners qualify for a discount?", options: { A: "By arranging their own transportation", B: "By placing a large order", C: "By referring new customers", D: "By paying in advance" }, correct: "B", explanation: "Une réduction automatique de 10 % est accordée pour toute commande importante de 100 $ ou plus (« Any large order of $100 or more »).", vocab: "qualify for (v.) : être éligible à\ndiscount (n.) : remise, réduction" }
+                ]
+            },
+            {
+                talk: "Questions 80-82 refer to the following recorded message.",
+                transcript: "You have reached the voicemail for Dr. Olden's Veterinary Clinic. Our office is closed for the evening, but we will open again tomorrow at 9 a.m. If you need to schedule an appointment for your dog, cat or other pet, please leave a message with your name and phone number and we will return your call. If you're calling about our photo contest, please visit our website for a list of contest details and instructions for submitting a photo of your pet. We'll announce the name of the winner on July 1st.",
+                questions: [
+                    { id: 80, text: "What kind of business is being called?", options: { A: "A pharmacy", B: "A camera store", C: "A telephone company", D: "An animal clinic" }, correct: "D", explanation: "Le message indique qu'il s'agit du répondeur d'une clinique vétérinaire (« Veterinary Clinic »), donc un centre de soin pour animaux (« An animal clinic »).", vocab: "veterinary (adj.) : vétérinaire\npet (n.) : animal de compagnie" },
+                    { id: 81, text: "According to the message, why is the business closed?", options: { A: "It is after business hours.", B: "It is a national holiday.", C: "The staff are on vacation.", D: "The office is being renovated." }, correct: "A", explanation: "Le message dit « closed for the evening », ce qui signifie que l'appel a lieu en dehors des heures d'ouverture standard.", vocab: "business hours (n.) : heures de bureau / d'ouverture\nvoicemail (n.) : boîte vocale / répondeur" },
+                    { id: 82, text: "What does the speaker say will happen on July 1?", options: { A: "A second location will open.", B: "A clearance sale will begin.", C: "A new regulation will go into effect.", D: "A contest winner will be announced." }, correct: "D", explanation: "Le message stipule précisément : « We'll announce the name of the winner on July 1st » concernant le concours photo.", vocab: "contest (n.) : concours\nsubmit (v.) : soumettre / envoyer" }
+                ]
+            },
+            {
+                talk: "Questions 83-85 refer to the following radio broadcast.",
+                transcript: "Hello listeners, welcome back. Today we have Ms. Singh in the studio. As a lead engineer at AeroCorp, she's here to discuss the new lightweight airplane seats they've designed to save fuel. We'll take your calls shortly, but right after this short break, stay tuned for the local traffic report.",
+                questions: [
+                    { id: 83, text: "According to the speaker, who is Ms. Singh?", options: { A: "A pilot", B: "A graphic designer", C: "An investor", D: "An engineer" }, correct: "D", explanation: "L'invitée est présentée sous sa fonction d'ingénieure principale (« lead engineer ») chez AeroCorp.", vocab: "lead engineer (n.) : ingénieur principal" },
+                    { id: 84, text: "What is special about some airplane seats?", options: { A: "They are lightweight.", B: "They are durable.", C: "They are small.", D: "They are customizable." }, correct: "A", explanation: "La spécificité de ces nouveaux sièges est d'être particulièrement légers (« lightweight ») pour économiser du carburant.", vocab: "lightweight (adj.) : léger\nsave fuel (expr.) : économiser du carburant" },
+                    { id: 85, text: "What will the listeners hear after the break?", options: { A: "A traffic report", B: "An advertisement", C: "A song", D: "An interview" }, correct: "A", explanation: "Juste après la courte pause, l'animateur annonce le point sur les conditions de circulation (« traffic report »).", vocab: "short break (n.) : une courte pause publicitaire\nstay tuned (expr.) : rester à l'écoute" }
+                ]
+            },
+            {
+                talk: "Questions 86-88 refer to the following instructions.",
+                transcript: "Thanks for coming to today's training session where we'll be going over the company's new email system. Um, it looks like the registration sheet wasn't updated. I'm surprised to see so many people here. It's okay though. We have enough computers. Please have a seat at any of them. I'm handing out a list of this system's password requirements now. Setting up your account, please confirm that you've received the automatic welcome message from the new system.",
+                questions: [
+                    { id: 86, text: "What is the topic of the training session?", options: { A: "Using an e-mail system", B: "Organizing customer files", C: "Editing a catalog", D: "Maintaining a calendar" }, correct: "A", explanation: "La session de formation porte sur le déploiement du nouveau système de messagerie électronique de l'entreprise (« new email system »).", vocab: "training session (n.) : session de formation\ngo over (v. phr.) : examiner / passer en revue" },
+                    { id: 87, text: "What surprises the speaker?", options: { A: "Some equipment is broken.", B: "More people than expected have come.", C: "A room is unavailable.", D: "Some materials he needs have been misplaced." }, correct: "B", explanation: "Le formateur indique : « I'm surprised to see so many people here », ce qui correspond au fait qu'il y a plus de participants que prévu.", vocab: "registration sheet (n.) : feuille d'émargement\nunexpectedly (adv.) : de manière inattendue" },
+                    { id: 88, text: "What does the speaker ask the listeners to confirm?", options: { A: "That a file was deleted", B: "That a program was updated", C: "That a message was received", D: "That a document was revised" }, correct: "C", explanation: "L'orateur demande en fin d'intervention de vérifier la bonne réception du message automatique d'accueil (« confirm that you've received the automatic welcome message »).", vocab: "hand out (v. phr.) : distribuer\nwelcome message (n.) : message de bienvenue" }
+                ]
+            },
+            {
+                talk: "Questions 89-91 refer to the following talk.",
+                transcript: "Okay, let's get started with today's meeting. As you all know, our clinic recently purchased new software for maintaining our patients' files. Now, I want to warn you that the new program looks very different from our old one. It will take some time to get used to, and I know you'll have questions, but remember, I'm here every day. In order to sign into the program for the first time, you will need a temporary password. I'll send those to you later this afternoon.",
+                questions: [
+                    { id: 89, text: "What did the clinic recently do?", options: { A: "It relocated a branch office.", B: "It purchased some software.", C: "It tested an advertising strategy.", D: "It hosted a healthcare workshop." }, correct: "B", explanation: "L'orateur rappelle que la clinique a fait l'acquisition récente d'un nouveau logiciel informatique (« recently purchased new software »).", vocab: "software (n.) : logiciel informatique\npurchase (v.) : acheter" },
+                    { id: 90, text: "Why does the speaker say, 'I'm here every day'?", options: { A: "To make a complaint", B: "To reject a proposal", C: "To offer assistance", D: "To justify an action" }, correct: "C", explanation: "En précisant qu'il est présent quotidiennement, l'orateur cherche à rassurer l'équipe et à proposer son aide face aux futures interrogations (« To offer assistance »).", vocab: "get used to (expr.) : se familiariser avec / s'habituer à\nwarn (v.) : prévenir / avertir" },
+                    { id: 91, text: "What will the speaker send to the listeners?", options: { A: "Passwords", B: "Some patient records", C: "A schedule", D: "Some legal regulations" }, correct: "A", explanation: "Il s'engage à envoyer dans l'après-midi les mots de passe temporaires indispensables pour la première connexion (« I'll send those [temporary passwords] to you »).", vocab: "temporary (adj.) : temporaire\nsign into (v. phr.) : se connecter à" }
+                ]
+            },
+            {
+                talk: "Questions 92-94 refer to the following telephone message.",
+                transcript: "Hi, Fumiko. I just had that meeting with our clients, the Mendez family. We showed them our proposal for the house we're designing for them. They seem to really like the blueprints, but they have some concerns. In the design we proposed, a lot of trees would have to be cut down. The family would like to avoid that, so they've asked us to revise our plans. I have some ideas on how to change the designs to address these concerns. I'm in meetings all day, but I'd like to get your opinion.",
+                questions: [
+                    { id: 92, text: "Where does the speaker most likely work?", options: { A: "At a manufacturing facility", B: "At a plant nursery", C: "At an architecture firm", D: "At an art supply store" }, correct: "C", explanation: "L'utilisation de termes techniques comme « blueprints » (plans de construction) et « designing a house » indique un environnement lié à l'architecture (« architecture firm »).", vocab: "blueprints (n.) : plans d'architecture\nfirm (n.) : cabinet / entreprise" },
+                    { id: 93, text: "What are the clients worried about?", options: { A: "The price of a service", B: "The location of a store", C: "The timing of a company merger", D: "The design of a project" }, correct: "D", explanation: "L'inquiétude des clients repose directement sur l'aménagement prévu (« design of a project ») qui implique d'abattre trop d'arbres.", vocab: "concern (n.) : préoccupation / inquiétude\ncut down (v. phr.) : abattre / couper" },
+                    { id: 94, text: "What does the speaker mean when he says 'I'm in meetings all day'?", options: { A: "He wants to hire an assistant.", B: "He is unavailable to talk now.", C: "A project must be reassigned.", D: "A service is very popular." }, correct: "B", explanation: "Cette phrase idiomatique sert à justifier le fait qu'il ne sera pas joignable par téléphone immédiatement pour échanger (« He is unavailable to talk now »).", vocab: "address concerns (expr.) : traiter / résoudre des problèmes\nunavailable (adj.) : indisponible" }
+                ]
+            },
+            {
+                talk: "Questions 95-97 refer to the following advertisement and price list.",
+                transcript: "Hi, this is world champion Lyle Davis. My basketball career has meant a lot of moving around the country to different teams in different cities. Whenever I've had to relocate, I've looked to Wakefield Movers. Everyone knows Wakefield for its fast service. They moved all of my furniture and belongings from Boston to Dallas in just three days. Well, right now, Wakefield is offering a special deal to go along with their famous Speedy service. Throughout the month of August, when you hire a Wakefield truck and four movers, you get a 10% discount. That's big savings. Let Wakefield take the pain out of your move. Call Wakefield Movers today.",
+                questions: [
+                    { id: 95, text: "What is the speaker's profession?", options: { A: "Musician", B: "Athlete", C: "Truck driver", D: "Car salesperson" }, correct: "B", explanation: "Le locuteur fait état de sa carrière de joueur de basketball de haut niveau (« basketball career »), c'est donc un athlète.", vocab: "career (n.) : carrière professionnelle\nathlete (n.) : sportif / athlète" },
+                    { id: 96, text: "What is Wakefield Movers best known for?", options: { A: "Its fast service", B: "Its friendly staff", C: "Its safety record", D: "Its clean vehicles" }, correct: "A", explanation: "Il est souligné que la réputation de l'entreprise repose sur la rapidité de l'exécution (« Everyone knows Wakefield for its fast service »).", vocab: "belongings (n.) : effets personnels / biens\nrelocate (v.) : déménager / se réinstaller" },
+                    { id: 97, text: "Look at the graphic. Which rental price is special for the month of August?", options: { A: "$40", B: "$70", C: "$250", D: "$300" }, correct: "D", explanation: "L'offre spéciale concerne la formule comprenant le grand camion avec quatre déménageurs (« a Wakefield truck and four movers »). Sur le graphique, cette option correspond au prix de 300 $.", vocab: "hire (v.) : louer / engager\nsavings (n.) : économies" }
+                ]
+            },
+            {
+                talk: "Questions 98-100 refer to the following telephone message and apartment map.",
+                transcript: "Hello, my name is Patricia Lee and I live at 64 Moon Drive, Apartment 302. I'm expecting your company to deliver a package to my apartment this Friday. Unfortunately, I have to go out of town on an unexpected business trip, so I won't be there to sign for it. I'm wondering if it would be possible to leave the package with my neighbor in Apartment 304. The building is locked, but the delivery person can call up to Apartment 304 from the phone next to the front entrance. My neighbor will then come downstairs to sign for the package. Please call me back at 555-0198 to let me know if this is possible. Thank you.",
+                questions: [
+                    { id: 98, text: "Why will the speaker be unavailable on Friday?", options: { A: "She has an interview.", B: "She has a medical appointment.", C: "She will be on a business trip.", D: "She will be away on vacation." }, correct: "C", explanation: "La cliente justifie son indisponibilité par un déplacement professionnel imprévu de dernière minute (« unexpected business trip »).", vocab: "business trip (n.) : voyage d'affaires\nunexpected (adj.) : imprévu / inattendu" },
+                    { id: 99, text: "Look at the graphic. What is the name of the person the speaker recommends contacting?", options: { A: "J. Davis", B: "P. Lee", C: "L. Cho", D: "R. Kratz" }, correct: "D", explanation: "Elle propose de confier le colis à son voisin de l'appartement 304 (« neighbor in Apartment 304 »). La lecture croisée du plan indique que l'appartement 304 est occupé par R. Kratz.", vocab: "neighbor (n.) : voisin" },
+                    { id: 100, text: "What does the speaker suggest that the delivery person do?", options: { A: "Bring a map", B: "Meet someone downstairs", C: "Return another day", D: "Leave a package in a secure place" }, correct: "B", explanation: "Patricia Lee précise que le voisin descendra au rez-de-chaussée pour signer l'accusé de réception (« My neighbor will then come downstairs to sign for the package »), impliquant de l'attendre ou de le retrouver en bas.", vocab: "come downstairs (v. phr.) : descendre au rez-de-chaussée\nsign for (v. phr.) : signer un reçu de livraison" }
+                ]
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuestions() {
+            const container = document.getElementById('dynamic-questions-container');
+            let currentHtml = '';
+
+            testData.forEach(talk => {
+                talk.questions.forEach(q => {
+                    
+                    // Insertion dynamique du bouton graphique AVANT la question 97
+                    if (q.id === 97) {
+                        currentHtml += `
+                            <div class="inline-graphic-wrapper">
+                                <button type="button" class="blink-btn" onclick="toggleGraphic('graphic1', this)">⚠️ Look at the graphic (Q97) — click here</button>
+                                <div id="graphic1" class="graphic-content">
+                                    <div class="graphic-title">August Rental Prices</div>
+                                    <table class="graphic-table">
+                                        <tr><td><span class="truck-icon">🚚</span> Small Truck</td><td>$40</td></tr>
+                                        <tr><td><span class="truck-icon">🚛</span> Medium Truck</td><td>$70</td></tr>
+                                        <tr><td><span class="truck-icon">🚛</span> Large Truck + 2 movers</td><td>$250</td></tr>
+                                        <tr><td><span class="truck-icon">🚛</span> Large Truck + 4 movers</td><td>$300</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Insertion dynamique du bouton graphique AVANT la question 99
+                    if (q.id === 99) {
+                        currentHtml += `
+                            <div class="inline-graphic-wrapper">
+                                <button type="button" class="blink-btn" onclick="toggleGraphic('graphic2', this)">⚠️ Look at the graphic (Q99) — click here</button>
+                                <div id="graphic2" class="graphic-content">
+                                    <div class="graphic-title">Apartment Map (3rd Floor)</div>
+                                    <div class="graphic-map">
+                                        <div class="map-col">
+                                            <div class="map-room"><div class="map-room-title">Apartment 301</div>J. Davis</div>
+                                            <div class="map-room"><div class="map-room-title">Apartment 302</div>P. Lee</div>
+                                        </div>
+                                        <div class="map-hallway">Stairs / Hallway</div>
+                                        <div class="map-col">
+                                            <div class="map-room"><div class="map-room-title">Apartment 303</div>L. Cho</div>
+                                            <div class="map-room"><div class="map-room-title">Apartment 304</div>R. Kratz</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Structure standard de la ligne de question
+                    currentHtml += `
+                        <div class="question-row" id="row-q${q.id}" style="margin-bottom: 15px;">
+                            <div class="q-text-container">
+                                <div class="q-num">${q.id}.</div>
+                                <div class="q-text">${q.text} ${ (q.id === 97 || q.id === 99) ? '<strong style="color:var(--incorrect);">[LOOK AT THE GRAPHIC]</strong>' : '' }</div>
+                            </div>
+                            <div class="options-group">
+                                ${['A', 'B', 'C', 'D'].map(opt => `
+                                    <label class="option-item">
+                                        <input type="radio" name="q${q.id}" value="${opt}">
+                                        <span class="option-label">${opt}</span>
+                                        <span class="option-text">${q.options[opt]}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            container.innerHTML = currentHtml;
+
+            // Écouteurs de changement
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const qId = e.target.name;
+                    userAnswers[qId] = e.target.value;
+                    updateSubmitButton();
+                });
+            });
+        }
+
+        function updateSubmitButton() {
+            const btn = document.getElementById('submit-btn');
+            const answered = Object.keys(userAnswers).length;
+            btn.textContent = `Terminer le test (${answered}/30)`;
+            if (answered === 30) {
+                btn.disabled = false;
+                btn.classList.add('active');
+            }
+        }
+
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            if (Object.keys(userAnswers).length < 30) return;
+            
+            let score = 0;
+            testData.forEach(talk => {
+                talk.questions.forEach(q => {
+                    if (userAnswers[`q${q.id}`] === q.correct) score++;
+                });
+            });
+
+            document.getElementById('test-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'block';
+            
+            document.getElementById('score-val').textContent = score;
+            document.getElementById('score-est').textContent = Math.round((score / 30) * 495);
+            window.scrollTo(0, 0);
+
+            renderCorrection();
+        });
+
+        function renderCorrection() {
+            const container = document.getElementById('correction-content');
+            
+            testData.forEach(talk => {
+                let talkHtml = `
+                <div class="talk-correction">
+                    <div class="talk-transcript">
+                        <strong>${talk.talk}</strong><br><br>
+                        "${talk.transcript}"
+                    </div>
+                `;
+
+                talk.questions.forEach(q => {
+                    const userAns = userAnswers[`q${q.id}`];
+                    
+                    let optionsHtml = '';
+                    ['A', 'B', 'C', 'D'].map(opt => {
+                        let cls = '';
+                        if (opt === q.correct) cls = 'correct';
+                        else if (opt === userAns && opt !== q.correct) cls = 'wrong';
+                        
+                        optionsHtml += `
+                            <div class="cq-opt ${cls}">
+                                <span class="cq-letter">${opt}.</span> ${q.options[opt]}
+                            </div>
+                        `;
+                    });
+
+                    talkHtml += `
+                        <div class="correction-q">
+                            <div class="cq-header">${q.id}. ${q.text}</div>
+                            <div class="cq-options">${optionsHtml}</div>
+                            <div class="cq-explanation"><strong>Explication :</strong> ${q.explanation}</div>
+                            <div class="cq-vocab">${q.vocab}</div>
+                        </div>
+                    `;
+                });
+
+                talkHtml += `</div>`;
+                container.insertAdjacentHTML('beforeend', talkHtml);
+            });
+        }
+
+        renderQuestions();
+    </script>
+</body>
+</html>
